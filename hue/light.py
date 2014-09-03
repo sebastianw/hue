@@ -38,14 +38,17 @@ class Light(object):
         state.update({"on": True})
         self.set_state(state)
 
+    def get_state(self, state):
+        self._update()
+        return self.json['state'][state]
+
     def set_state(self, state):
         self._put('state', state)
         self._update()
 
     @property
     def bri(self):
-        self._update()
-        return self.json['state']['bri']
+        return self.get_state('bri')
 
     @bri.setter
     def bri(self, brightness):
@@ -54,8 +57,7 @@ class Light(object):
 
     @property
     def hue(self):
-        self._update()
-        return self.json['state']['hue']
+        return self.get_state('hue')
 
     @hue.setter
     def hue(self, hue):
@@ -64,8 +66,7 @@ class Light(object):
 
     @property
     def sat(self):
-        self._update()
-        return self.json['state']['sat']
+        return self.get_state('sat')
 
     @sat.setter
     def sat(self, saturation):
