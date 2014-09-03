@@ -50,8 +50,7 @@ class Light(object):
     @bri.setter
     def bri(self, brightness):
         if 0 <= brightness <= 255:
-            self._put('state', {"bri": brightness})
-            self._update()
+            self.set_state({"bri": brightness})
 
     @property
     def hue(self):
@@ -61,8 +60,7 @@ class Light(object):
     @hue.setter
     def hue(self, hue):
         if 0 <= hue <= 65535:
-            self._put('state', {"hue": hue})
-            self._update()
+            self.set_state({"hue": hue})
 
     @property
     def sat(self):
@@ -72,4 +70,4 @@ class Light(object):
     @sat.setter
     def sat(self, saturation):
         if 0 <= saturation <= 255:
-            self._put('state', {"sat": saturation})
+            self.set_state({"sat": saturation})
