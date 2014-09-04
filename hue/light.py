@@ -8,7 +8,6 @@ class Light(object):
     def __init__(self, light_id, bridge):
         self.bridge = bridge
         self.id = int(light_id)
-        self.name = None
         self.json = None
         self._update()
 
@@ -18,10 +17,10 @@ class Light(object):
 
     def _update(self):
         j = self.bridge.get('/lights/%s' % self.id)
-        self.name = j['name']
         self.json = j
 
     def __getattr__(self, name):
+        self._update()
         if name in self.json:
             return self.json[name]
         else:
@@ -30,6 +29,16 @@ class Light(object):
 
     def _put(self, path, data):
         return self.bridge.put('/lights/%s/%s' % (self.id, path), data)
+
+    @property
+    def name(self):
+        self._update()
+        return self.json['name']
+
+    @name.setter
+    def name(self, name):
+        self._put('', {"name": name})
+        self._update()
 
     def off(self):
         self.set_state({"on": False})
@@ -47,6 +56,14 @@ class Light(object):
         self._update()
 
     @property
+    def alert(self):
+        self.get_state('alert')
+
+    @alert.setter
+    def alert(self, state):
+            self.set_state({"alert": state})
+
+    @property
     def bri(self):
         return self.get_state('bri')
 
@@ -54,6 +71,22 @@ class Light(object):
     def bri(self, brightness):
         if 0 <= brightness <= 255:
             self.set_state({"bri": brightness})
+
+    @property
+    def ct(self):
+        return self.get_state('ct')
+
+    @ct.setter
+    def ct(self, ct):
+        return self.set_state({"ct": ct})
+
+    @property
+    def effect(self):
+        return self.get_state('effect')
+
+    @effect.setter
+    def effect(self, effect):
+        self.set_state({"effect": effect})
 
     @property
     def hue(self):
@@ -72,3 +105,12 @@ class Light(object):
     def sat(self, saturation):
         if 0 <= saturation <= 255:
             self.set_state({"sat": saturation})
+
+    @property
+    def xy(self):
+        return self.get_state('xy')
+
+    @xy.setter
+    def xy(self, xy):
+        if len(xy) == 2 and 0 <= xy[0] <= 1 and 0 <= xy[1] <= 1:
+            self.set_state({"xy": xy})
