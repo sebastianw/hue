@@ -66,7 +66,7 @@ class Bridge(object):
         j = r.json()
         log.debug('Call returned: %s' % j)
 
-        if isinstance(j, (list, tuple)):
+        if isinstance(j, (list, tuple)) and len(j):
             if 'error' in j[0]:
                 err = j[0]['error']
                 raise BridgeError(err['description'], err['type'],
